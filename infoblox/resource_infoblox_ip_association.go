@@ -3,7 +3,7 @@ package infoblox
 import (
 	"fmt"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/infobloxopen/infoblox-go-client"
+	"github.com/shanedabes/infoblox-go-client"
 	"log"
 	"strings"
 )

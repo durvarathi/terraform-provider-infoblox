@@ -3,7 +3,7 @@ package infoblox
 import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/infobloxopen/infoblox-go-client"
+	"github.com/shanedabes/infoblox-go-client"
 	"time"
 )
 
