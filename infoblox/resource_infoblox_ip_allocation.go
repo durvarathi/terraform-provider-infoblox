@@ -3,7 +3,7 @@ package infoblox
 import (
 	"fmt"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/infobloxopen/infoblox-go-client"
+	"github.com/shanedabes/infoblox-go-client"
 	"log"
 )
 
@@ -41,6 +41,12 @@ func resourceIPAllocation() *schema.Resource {
 				Optional:    true,
 				Default:     false,
 				Description: "flag that defines if the host reocrd is used for DNS or IPAM Purposes.",
+			},
+			"enable_dhcp": &schema.Schema{
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "flag that defines if the host record has dhcp enabled",
 			},
 			"dns_view": &schema.Schema{
 				Type:        schema.TypeString,
@@ -88,6 +94,7 @@ func resourceIPAllocationRequest(d *schema.ResourceData, m interface{}) error {
 	zone := d.Get("zone").(string)
 	enableDns := d.Get("enable_dns").(bool)
 	dnsView := d.Get("dns_view").(string)
+	enableDhcp := d.Get("enable_dhcp").(bool)
 
 	connector := m.(*ibclient.Connector)
 	ZeroMacAddr := "00:00:00:00:00:00"
@@ -106,7 +113,7 @@ func resourceIPAllocationRequest(d *schema.ResourceData, m interface{}) error {
 	objMgr := ibclient.NewObjectManager(connector, "Terraform", tenantID)
 
 	if (zone != "" || len(zone) != 0) && (dnsView != "" || len(dnsView) != 0) {
-		hostAddressObj, err := objMgr.CreateHostRecord(enableDns, name, networkViewName, dnsView, cidr, ipAddr, macAddr, ea)
+		hostAddressObj, err := objMgr.CreateHostRecord(enableDns, name, networkViewName, dnsView, cidr, ipAddr, enableDhcp, macAddr, ea)
 		if err != nil {
 			return fmt.Errorf("Error allocating IP from network block(%s): %s", cidr, err)
 		}
